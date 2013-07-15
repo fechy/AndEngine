@@ -27,6 +27,7 @@ import org.andengine.util.Constants;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.system.SystemUtils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
@@ -99,7 +100,7 @@ public abstract class BaseGameActivity extends BaseActivity implements IGameInte
 		if(this.mGameCreated) {
 			this.onReloadResources();
 
-			if(this.mGamePaused && this.mGameCreated) {
+			if(this.mGamePaused && this.mGameCreated && !this.isFinishing()) {
 				this.onResumeGame();
 			}
 		} else {
@@ -228,7 +229,7 @@ public abstract class BaseGameActivity extends BaseActivity implements IGameInte
 	public synchronized void onWindowFocusChanged(final boolean pHasWindowFocus) {
 		super.onWindowFocusChanged(pHasWindowFocus);
 
-		if(pHasWindowFocus && this.mGamePaused && this.mGameCreated) {
+		if(pHasWindowFocus && this.mGamePaused && this.mGameCreated && !this.isFinishing()) {
 			this.onResumeGame();
 		}
 	}
@@ -370,7 +371,10 @@ public abstract class BaseGameActivity extends BaseActivity implements IGameInte
 		BaseGameActivity.this.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				BaseGameActivity.this.onResumeGame();
+//				BaseGameActivity.this.onResumeGame();
+				if (!BaseGameActivity.this.isFinishing()) {
+				  BaseGameActivity.this.onResumeGame();
+				}
 			}
 		});
 	}
@@ -420,7 +424,8 @@ public abstract class BaseGameActivity extends BaseActivity implements IGameInte
 		}
 	}
 
-	private void applyEngineOptions() {
+	@SuppressLint("InlinedApi")
+  private void applyEngineOptions() {
 		final EngineOptions engineOptions = this.mEngine.getEngineOptions();
 
 		if(engineOptions.isFullscreen()) {

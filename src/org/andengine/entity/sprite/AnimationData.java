@@ -30,6 +30,7 @@ public class AnimationData implements IAnimationData {
 	private long[] mFrameEndsInNanoseconds;
 
 	private long mAnimationDuration;
+	private int mAnimationDirection;
 
 	// ===========================================================
 	// Constructors
@@ -141,16 +142,32 @@ public class AnimationData implements IAnimationData {
 	 * @return
 	 */
 	@Override
+//	public int calculateCurrentFrameIndex(final long pAnimationProgress) {
+//		final long[] frameEnds = this.mFrameEndsInNanoseconds;
+//		final int frameCount = this.mFrameCount;
+//		for(int i = 0; i < frameCount; i++) {
+//			if(frameEnds[i] > pAnimationProgress) {
+//				return i;
+//			}
+//		}
+//
+//		return frameCount - 1;
+//	}
 	public int calculateCurrentFrameIndex(final long pAnimationProgress) {
-		final long[] frameEnds = this.mFrameEndsInNanoseconds;
-		final int frameCount = this.mFrameCount;
-		for(int i = 0; i < frameCount; i++) {
-			if(frameEnds[i] > pAnimationProgress) {
-				return i;
-			}
-		}
+      final long animationProgress = pAnimationProgress;
+      final long[] frameEnds = this.mFrameEndsInNanoseconds;
+      final int frameCount = this.mFrameCount;
+      for(int i = 0; i < frameCount; i++) {
+        if(frameEnds[i] > animationProgress) {
+          return i * mAnimationDirection;
+        }
+      }
 
-		return frameCount - 1;
+      return (frameCount - 1) * mAnimationDirection;
+	}
+	
+	private void setDirection(int pFirstTileIndex, int pLastTileIndex) {
+		this.mAnimationDirection = (pLastTileIndex > pFirstTileIndex ? 1 : -1);
 	}
 
 	@Override
@@ -201,9 +218,11 @@ public class AnimationData implements IAnimationData {
 	 */
 	@Override
 	public void set(final long[] pFrameDurations, final int pFirstFrameIndex, final int pLastFrameIndex, final int pLoopCount) {
-		this.set(pFrameDurations, (pLastFrameIndex - pFirstFrameIndex) + 1, null, pFirstFrameIndex, pLoopCount);
+		this.setDirection(pFirstFrameIndex, pLastFrameIndex);
+		int frameCount = this.mAnimationDirection == 1 ? (pLastFrameIndex - pFirstFrameIndex) + 1 : (pFirstFrameIndex - pLastFrameIndex) + 1;
+		this.set(pFrameDurations, frameCount, null, pFirstFrameIndex, pLoopCount);
 
-		if((pFirstFrameIndex + 1) > pLastFrameIndex) {
+		if(frameCount < 2) {
 			throw new IllegalArgumentException("An animation needs at least two tiles to animate between.");
 		}
 	}
