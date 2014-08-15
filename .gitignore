@@ -10,7 +10,7 @@ Desktop.ini
 CVS
 .hg
 .bzr
-
+*.iml
 build/
 .gradle/
 

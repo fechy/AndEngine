@@ -1,0 +1,3 @@
+include ":Kingmonkey-android-libs"
+include ":KMServer"
+project(":KMServer").projectDir = new File("../libraries/king-monkey-server-libs")
