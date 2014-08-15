@@ -11,6 +11,9 @@ CVS
 .hg
 .bzr
 
+build/
+.gradle/
+
 # Android:
 local.properties
 proguard/**

@@ -68,6 +68,7 @@ public class BitmapTexture extends Texture {
 
 		final BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
 		decodeOptions.inJustDecodeBounds = true;
+		decodeOptions.inDither = true;
 
 		final InputStream in = null;
 		try {
@@ -75,7 +76,7 @@ public class BitmapTexture extends Texture {
 		} finally {
 			StreamUtils.close(in);
 		}
-
+		
 		this.mWidth = decodeOptions.outWidth;
 		this.mHeight = decodeOptions.outHeight;
 	}

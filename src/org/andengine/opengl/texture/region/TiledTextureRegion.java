@@ -2,6 +2,7 @@ package org.andengine.opengl.texture.region;
 
 import org.andengine.opengl.texture.ITexture;
 import org.andengine.opengl.texture.Texture;
+import org.andengine.util.debug.Debug;
 
 /**
  * (c) 2010 Nicolas Gramlich
@@ -176,7 +177,14 @@ public class TiledTextureRegion extends BaseTextureRegion implements ITiledTextu
 
 	@Override
 	public float getWidth(final int pTileIndex) {
-		return this.mTextureRegions[pTileIndex].getWidth();
+	  float pWidth = 0;
+	  try {
+	    pWidth = this.mTextureRegions[pTileIndex].getWidth();
+	  } catch(ArrayIndexOutOfBoundsException e) {
+	    Debug.e("ArrayIndexOutOfBoundsException!");
+	    throw e;
+	  }
+    return pWidth;
 	}
 
 	@Override

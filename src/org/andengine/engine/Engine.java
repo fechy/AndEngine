@@ -42,6 +42,7 @@ import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.util.debug.Debug;
 import org.andengine.util.time.TimeConstants;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -66,6 +67,7 @@ import android.view.WindowManager;
  * @author Nicolas Gramlich
  * @since 12:21:31 - 08.03.2010
  */
+@SuppressLint("WrongCall")
 public class Engine implements SensorEventListener, OnTouchListener, ITouchEventCallback, LocationListener {
 	// ===========================================================
 	// Constants
@@ -634,6 +636,30 @@ public class Engine implements SensorEventListener, OnTouchListener, ITouchEvent
 		final long now = System.nanoTime();
 
 		return now - this.mLastTick;
+
+//    long smoothedDeltaRealTime = (long) 17500000;
+//    long movAverageDeltaTime=smoothedDeltaRealTime;
+//   
+//    final long movAveragePeriod=40;
+//    final float smoothFactor=0.2f;
+//   
+//    long currTimePick = System.nanoTime();
+//           
+//    long realTimeElapsed;
+//    if(lastRealTimeMeasurement > 0) {
+//      realTimeElapsed = (currTimePick - lastRealTimeMeasurement);
+//    } else {
+//      realTimeElapsed = smoothedDeltaRealTime; // just the first time
+//    }
+//    
+//    movAverageDeltaTime = ((realTimeElapsed + movAverageDeltaTime * (movAveragePeriod - 1)) / movAveragePeriod);
+//
+//     // Calc a better aproximation for smooth stepTime
+//    smoothedDeltaRealTime = (long)(smoothedDeltaRealTime +(movAverageDeltaTime - smoothedDeltaRealTime)* smoothFactor);
+//
+//    lastRealTimeMeasurement = currTimePick;
+//    
+//    return smoothedDeltaRealTime;
 	}
 
 	public boolean enableVibrator(final Context pContext) {
@@ -690,7 +716,7 @@ public class Engine implements SensorEventListener, OnTouchListener, ITouchEvent
 
 			if(this.mAccelerationData == null) {
 				final Display display = ((WindowManager) pContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-				final int displayRotation = display.getOrientation();
+				final int displayRotation = display.getRotation();
 				this.mAccelerationData = new AccelerationData(displayRotation);
 			}
 
@@ -733,7 +759,7 @@ public class Engine implements SensorEventListener, OnTouchListener, ITouchEvent
 
 			if(this.mOrientationData == null) {
 				final Display display = ((WindowManager) pContext.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-				final int displayRotation = display.getOrientation();
+				final int displayRotation = display.getRotation(); //.getOrientation();
 				this.mOrientationData = new OrientationData(displayRotation);
 			}
 
